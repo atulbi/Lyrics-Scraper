@@ -38,10 +38,13 @@ class ArtistPageCrawler{
 					year: getYear($ , elem) , 
 					links : getTracksLinks($, elem)
 				}
-			});
+			})
 
 			fn(albums);
-		});
+		})
+		.catch(function (err) {
+        	console.log("Error At "+ url);
+   	 	});
 	}
 }
 
