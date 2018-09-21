@@ -8,7 +8,10 @@ class LyricsPageCrawler{
 			let $ = cheerio.load(html);
 			this.data = $(".text-center > div:nth-of-type(5)").text();
 			fn(this.data);
-		});	
+		})
+		.catch(function (err) {
+        	console.log("Error At "+ url);
+   	 	});
 	}
 }
 

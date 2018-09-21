@@ -2,7 +2,7 @@ var cheerio = require("cheerio");
 var rp = require('request-promise');
 
 class ArtistPageCrawler{
-	constructor(url){
+	constructor(url,fn){
 		this.url = url;
 
 		function getYear($ , elem){
@@ -39,8 +39,12 @@ class ArtistPageCrawler{
 					links : getTracksLinks($, elem)
 				}
 			});
+
+			fn(albums);
 		});
 	}
 }
+
+// new ArtistPageCrawler("https://www.azlyrics.com/e/eminem.html")
 
 module.exports = ArtistPageCrawler;
