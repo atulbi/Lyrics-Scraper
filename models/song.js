@@ -7,10 +7,11 @@ let songSchema = mongoose.Schema({
 		type : mongoose.Schema.Types.ObjectId,
 		ref : "album"
 	},
-	artist : [{
+	artist : {
 		type : mongoose.Schema.Types.ObjectId,
 		ref  : "artist"
-	}]
+	},
+	feat	: String
 });
 
 module.exports = mongoose.model("song" , songSchema);

@@ -4,9 +4,14 @@ let mongoose = require("mongoose"),
 
 let artistSchema = mongoose.Schema({
 	name 	: String , 
-	pic  	: String , 
+	pic  	: {
+		type 	:	String,
+		default :	'https://image.flaticon.com/icons/svg/199/199478.svg'
+	}, 
 	albums	: [{
 		type : mongoose.Schema.Types.ObjectId,
 		ref : 'album'
 	}]
 });
+
+module.exports = mongoose.model("artist" , artistSchema);

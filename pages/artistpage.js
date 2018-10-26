@@ -1,4 +1,5 @@
-var cheerio = require("cheerio");
+var cheerio = require("cheerio"),
+	album 	= require("../models/album");
 var rp = require('request-promise');
 
 class ArtistPageCrawler{
@@ -47,6 +48,7 @@ class ArtistPageCrawler{
 		})
 		.catch(function (err) {
         	console.log("Error At "+ url);
+        	console.log(err);
    	 	});
 	}
 }
