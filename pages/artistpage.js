@@ -7,7 +7,7 @@ class ArtistPageCrawler{
 
 		function getYear($ , elem){
 			let year
-			try{	year=$(elem).children()['0']['next']['data'];	}	
+			try{	year=$(elem).children()['0']['next']['data'].slice(2,-1);	}	
 			catch(e){	year = 'unknown';	}
 			return year
 		}
@@ -29,18 +29,21 @@ class ArtistPageCrawler{
 
 		rp(this.url).then((html)=>{
 			let $ = cheerio.load(html);
-
-			let albums = []
+			let artist = {
+				name : $(".row h1 strong").text().slice(0 , -7)
+			}
+			
+			artist.albums = []
 			$("#listAlbum > .album").each((i ,elem )=>{
 				
-				albums[i] = {
-					name: $(elem).find("b").text() != '' ? $(elem).find("b").text() : 'others' ,
+				artist.albums[i] = {
+					name: $(elem).find("b").text() != '' ? $(elem).find("b").text().slice(1,-1) : 'others' ,
 					year: getYear($ , elem) , 
 					links : getTracksLinks($, elem)
 				}
 			})
-
-			fn(albums);
+			console.log(artist)
+			fn(artist);
 		})
 		.catch(function (err) {
         	console.log("Error At "+ url);

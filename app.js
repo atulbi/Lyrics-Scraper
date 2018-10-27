@@ -6,12 +6,12 @@ let cheerio 	= require("cheerio"),
 	ArtistPage 	= require("./pages/artistpage"),
 	mongoose 	= require("mongoose");
 
-mongoose.connect("mongodb://127.0.0.1/lyricxhunt");
+mongoose.connect(process.env.DATABASE_URL);
 
 var k = new ArtistPage('https://www.azlyrics.com/e/eminem.html', function(res){
 	console.log(res);
 	let i =1;
-	for (album of res) {
+	for (album of res['albums']) {
 		for (links of album['links']) {
 			console.log(album['name'])
 			let lyricsurl = 'https://www.azlyrics.com' + links['link'].substr(2);		
@@ -25,5 +25,3 @@ var k = new ArtistPage('https://www.azlyrics.com/e/eminem.html', function(res){
 		}
 	}
 });
-
-
