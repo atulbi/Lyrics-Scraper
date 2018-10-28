@@ -28,7 +28,8 @@ class ArtistPageCrawler{
 			return links;
 		}
 
-		rp(this.url).then((html)=>{
+		rp(this.url)
+		.then((html)=>{
 			let $ = cheerio.load(html);
 			let artist = {
 				name : $(".row h1 strong").text().slice(0 , -7)
@@ -43,7 +44,7 @@ class ArtistPageCrawler{
 					links : getTracksLinks($, elem)
 				}
 			})
-			console.log(artist)
+			// console.log(artist)
 			fn(artist);
 		})
 		.catch(function (err) {

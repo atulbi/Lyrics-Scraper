@@ -11,6 +11,7 @@ class LyricsPageCrawler{
 		})
 		.catch(function (err) {
         	console.log("Error At "+ url);
+        	console.log(err);
    	 	});
 	}
 }

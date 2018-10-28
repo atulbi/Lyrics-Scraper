@@ -37,9 +37,10 @@ var k = new ArtistPage('https://www.azlyrics.com/e/eminem.html', function(res){
 
 		for (links of album['links']) {
 			let lyricsurl = 'https://www.azlyrics.com' + links['link'].substr(2);		
-
+			let name = links['name'];
 			setTimeout(()=>{
 				console.log(lyricsurl)
+				console.log(name)
 				new LyricsPage(lyricsurl , function(lyrics){
 					console.log('.');
 				});
