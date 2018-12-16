@@ -7,10 +7,26 @@ let cheerio 	= require("cheerio"),
 	ArtistPage 	= require("./pages/artistpage"),
 	mongoose 	= require("mongoose");
 
-mongoose.connect(process.env.DATABASE_URL);
+// mongoose.connect(process.env.DATABASE_URL);
+mongoose.connect("mongodb://localhost/lyricxhunt");
 
-var k = new ArtistPage('https://www.azlyrics.com/e/eminem.html', function(res){
-	// console.log(res);
+let URL='';
+
+if(process.argv.length <= 2){
+	console.log("USAGE : node app.js \"<Artist Name>\"");
+	return;
+}else{
+	let artistName = '' , indexTitle = '';
+	let strs = process.argv[2].split(" ");
+	for (let x of strs)
+		artistName += x.toLowerCase();
+	indexTitle = artistName[0].toLowerCase().match(/[a-z]/) == null ? '19' : artistName[0].toLowerCase();
+	URL = 'https://www.azlyrics.com/' + indexTitle + '/' + artistName + '.html'
+}
+
+console.log(URL);
+
+var k = new ArtistPage(URL, function(res){
 
 	// Artist Object 
 	let artist_details = new Artist({
@@ -30,35 +46,42 @@ var k = new ArtistPage('https://www.azlyrics.com/e/eminem.html', function(res){
 			artist 	: artist_details._id,
 			songs	: []
 		})
-
-
 		artist_details.albums.push(album_details._id);
-
-
+		songsPromise = [];
 		for (links of album['links']) {
 			let lyricsurl = 'https://www.azlyrics.com' + links['link'].substr(2);		
 			let name = links['name'];
-			setTimeout(()=>{
-				console.log(lyricsurl)
-				console.log(name)
-				new LyricsPage(lyricsurl , function(lyrics){
-					console.log('.');
-				});
-			},i*3000);
-			i++;
-			if(i%3 == 0){
-				break;
-			}
-		}
-		setTimeout(()=>{
-			album_details.save(function(err){
-				if(err){
-					console.log(err);
-				}else{
-					console.log("ALBUM DETAILS SAVED")
-				}
+			thisTrackPromise =  new Promise((resolve , reject)=>{
+				setTimeout(()=>{
+					console.log(lyricsurl)
+					console.log(name)
+					try{
+						new LyricsPage(lyricsurl , function(lyrics){
+							console.log('.');
+							resolve({
+								name : name,
+								lyrics : lyrics
+							});
+						});
+					}
+					catch(ex){
+						reject(new Error("CANNOT FIND LYRICS AT "+lyricsurl));
+					}
+				},i*10000);
+				i++;
 			});
-		},i*3000);		
+			songsPromise.push(thisTrackPromise);
+		}
+		
+		Promise.all(songsPromise)
+		.then((values) =>{
+			for(let x of values){
+				console.log(x['name']);
+			}
+		})
+		.catch((err) =>{
+			console.log(err);
+		});		
 	}
 	artist_details.save(function(err){
 		if(err){
