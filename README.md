@@ -1,4 +1,4 @@
-# Lyrics Scrapper
+# Lyrics Scraper
 
 Node based command line tool to fill database with lyrics of all songs provided Artist Name
 
